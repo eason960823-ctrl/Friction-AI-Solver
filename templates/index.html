@@ -19,9 +19,9 @@
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        body { background-color: #f8f9fa; font-family: "Helvetica Neue", Arial, "Noto Sans TC", sans-serif; }
-        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; }
-        .result-box { background-color: #ffffff; border-left: 5px solid #0d6efd; padding: 20px; border-radius: 4px; }
+        body { background-color: #f4f6f9; font-family: "Helvetica Neue", Arial, "Noto Sans TC", sans-serif; }
+        .card { box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: none; border-radius: 10px; }
+        .result-box { background-color: #ffffff; border-left: 5px solid #0d6efd; padding: 25px; border-radius: 4px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -32,16 +32,22 @@
 
             <div class="text-center mb-5">
                 <h1 class="display-5 fw-bold text-primary">摩擦力 AI 智慧解題系統</h1>
-                <p class="text-muted">支援水平面、斜面、拉力夾角等各種摩擦力題型。可直接輸入文字或上傳題目圖片！</p>
+                <p class="text-muted">支援水平面、斜面、拉力夾角等各種摩擦力題型。請輸入您的 Gemini API 金鑰並提供題目！</p>
             </div>
 
             <div class="card mb-4">
                 <div class="card-body p-4">
                     <form action="/" method="post" enctype="multipart/form-data">
 
+                        <div class="mb-4">
+                            <label for="api_key" class="form-label fw-bold text-danger">Gemini API 金鑰 (必填 🔒)：</label>
+                            <input type="password" class="form-control form-control-lg" id="api_key" name="api_key" placeholder="請貼上您的 AIzaSy... 金鑰" value="{{ api_key }}" required>
+                            <div class="form-text text-muted">提示：本網頁系統為純局部運行，絕不會外洩或儲存您的金鑰。</div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="question" class="form-label fw-bold text-secondary">請輸入題目文字描述（若僅有圖片可留空）：</label>
-                            <textarea class="form-control" id="question" name="question" rows="4" placeholder="例如：一個質量 5kg 的物體放在水平面上，靜摩擦係數為 0.5...外力施加 20N，求摩擦力與加速度。">{{ question }}</textarea>
+                            <textarea class="form-control" id="question" name="question" rows="4" placeholder="例如：一個質量 5kg 的木塊放在水平面上，靜摩擦係數為 0.5...外力施加 20N，求摩擦力與加速度。">{{ question }}</textarea>
                         </div>
 
                         <div class="mb-4">
@@ -67,11 +73,8 @@
             <div id="raw-result" style="display:none;">{{ result }}</div>
 
             <script>
-                // 1. 將後端傳回的 Markdown 轉成 HTML
                 const rawMarkdown = document.getElementById('raw-result').innerText;
                 document.getElementById('formatted-result').innerHTML = marked.parse(rawMarkdown);
-
-                // 2. 通知 MathJax 重新渲染網頁中的數學公式
                 if (window.MathJax && window.MathJax.typeset) {
                     window.MathJax.typeset();
                 }
